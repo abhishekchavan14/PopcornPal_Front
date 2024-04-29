@@ -1,0 +1,135 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: #121212;
+  font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.custom-shadow{
+  box-shadow: 0px 0px 0px 0px rgba(255, 255, 255, 0.107);
+}
+.custom-shadow:hover{
+  box-shadow: 0px 0px 20px 0px rgba(255, 255, 255, 0.107);
+}
+
+/* notification animation */
+.popup {
+  animation: slide 300ms;
+  animation-fill-mode: forwards;
+}
+
+/* Add animation (fade in the popup) */
+@keyframes slide {
+  0% {
+    margin-top: 0;
+  }
+
+  20% {
+    margin-top: 5px;
+  }
+
+  30% {
+    margin-top: 10px;
+  }
+
+  40% {
+    margin-top: 15px;
+  }
+
+  50% {
+    margin-top: 20px;
+  }
+
+  60% {
+    margin-top: 25px;
+  }
+
+  70% {
+    margin-top: 30px;
+  }
+
+  80% {
+    margin-top: 35px;
+  }
+
+  90% {
+    margin-top: 40px;
+  }
+
+  100% {
+    margin-top: 45px;
+  }
+}
+
+
+/* for slidshow */
+.slide-in-from-right {
+  animation: slideInFromRight 0.5s;
+}
+.slide-out-to-left {
+  animation: slideOutToLeft 0.5s;
+}
+.slide-out-to-right {
+  animation: slideOutToRight 0.5s;
+}
+.slide-in-from-left {
+  animation: slideInFromLeft 0.5s;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes slideOutToLeft {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+@keyframes slideOutToRight {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(100%);
+  }
+}
