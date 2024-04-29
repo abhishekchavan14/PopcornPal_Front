@@ -35,7 +35,7 @@ export default function SingleMovie() {
       <div className="h-screen flex flex-col justify-center items-center">
         <VscLoading className="animate-spin text-primary-red text-8xl" />
         <div className="text-3xl text-white text-center animate-pulse">
-          Hold on, we are almost there...🍿🎥
+          Hold on, almost there...🍿🎥
         </div>
       </div>
     );
@@ -64,13 +64,15 @@ export default function SingleMovie() {
   };
 
   const handleSubmit = async (data) => {
-    console.log(data)
+    setReady(false);
     const { error, message } = await addReview(movieId, data);
+    setReady(true);
     if (error) return updateNotification("error", error);
 
     updateNotification("success", message);
     handleAddReview();
   };
+
   return (
     <>
       <div
@@ -87,7 +89,10 @@ export default function SingleMovie() {
             <div className="mb-3 md:my-3 flex flex-wrap space-x-3">
               {genres.map((g, index) => {
                 return (
-                  <span key={index} className="text-primary-red border p-1 text-xs md:text-md text-center rounded-xl">
+                  <span
+                    key={index}
+                    className="text-primary-red border p-1 text-xs md:text-md text-center rounded-xl"
+                  >
                     <span>{g}</span>
                   </span>
                 );

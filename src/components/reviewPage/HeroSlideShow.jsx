@@ -78,7 +78,7 @@ export default function HeroSlideShow() {
     <div className="w-full flex justify-center space-x-10">
       {/* SlideShow */}
       <div className="w-4/5 aspect-video relative overflow-hidden">
-        <Link to={"/movie/" + slide.id} className="w-full">
+        <Link to={"/movie/" + slide._id} className="w-full">
           <img
             // onAnimationEnd={handleAnimationEnd}
             ref={slideRef}

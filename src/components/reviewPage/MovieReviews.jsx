@@ -6,10 +6,12 @@ import { useNotification } from "../../hooks";
 import { getSingleMovie } from "../../api/movie";
 import { BiUpvote, BiDownvote } from "react-icons/bi";
 import { PiPopcornFill } from "react-icons/pi";
+import { VscLoading } from "react-icons/vsc";
 
 export default function MovieReviews() {
   const [reviews, setReviews] = useState([]);
   const [movie, setMovie] = useState({});
+  const [ready, setReady] = useState(false);
 
   const { movieId } = useParams();
   const { updateNotification } = useNotification();
@@ -19,6 +21,7 @@ export default function MovieReviews() {
     if (error) updateNotification("error", error);
     reviews.sort((a, b) => b.upvotes - a.upvotes);
     setReviews([...reviews]);
+    setReady(true);
   };
   const fetchMovie = async () => {
     const { error, movie } = await getSingleMovie(movieId);
@@ -33,7 +36,15 @@ export default function MovieReviews() {
       fetchMovie();
     }
   }, [movieId]);
-  // console.log(reviews);
+  if (!ready)
+    return (
+      <div className="h-screen flex flex-col justify-center items-center">
+        <VscLoading className="animate-spin text-primary-red text-8xl" />
+        <div className="text-3xl text-white text-center animate-pulse">
+          Getting the Reviews Ready..💬
+        </div>
+      </div>
+    );
 
   return (
     <div className="w-full h-full flex justify-center items-center text-white">
@@ -67,12 +78,15 @@ const ReviewCard = ({ review }) => {
   const [reviewDownvotes, setReviewDownvotes] = useState(downvotes);
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [hasDownvoted, setHasDownvoted] = useState(false);
-  const [reviewColor, setReviewColor] = useState("text-dark-subtle")
+  const [reviewColor, setReviewColor] = useState("text-dark-subtle");
   const { updateNotification } = useNotification();
   const handleUpvote = async () => {
     if (!hasUpvoted && !hasDownvoted) {
       const { error, message } = await addUpvote(movieId, reviewID, ownerID);
       if (error) return updateNotification("error", error);
+
+      //TODO: fault in backend...doesnt upvote but shows the 500 error in green
+
       setReviewUpvotes((prevUpvotes) => prevUpvotes + 1);
       setHasUpvoted(true);
       updateNotification("success", message);
@@ -89,21 +103,21 @@ const ReviewCard = ({ review }) => {
     }
   };
 
-  const checkReviewTag = (reviewTag) =>{
+  const checkReviewTag = (reviewTag) => {
     switch (reviewTag) {
       case "Positive":
-        setReviewColor("text-light-green")
+        setReviewColor("text-light-green");
         break;
       case "Negative":
-        setReviewColor("text-red-300")
+        setReviewColor("text-red-300");
         break;
       case "Mixed":
-        setReviewColor("text-orange-300")
+        setReviewColor("text-orange-300");
         break;
       default:
         break;
     }
-  }
+  };
   useEffect(() => {
     // Check review tag only once, after component mount
     checkReviewTag(reviewTag);
