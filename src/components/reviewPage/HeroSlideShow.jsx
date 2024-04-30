@@ -82,7 +82,7 @@ export default function HeroSlideShow() {
           <img
             // onAnimationEnd={handleAnimationEnd}
             ref={slideRef}
-            className="aspect-video object-cover"
+            className="w-full"
             src={slide.poster}
             alt=""
           />
@@ -100,7 +100,7 @@ export default function HeroSlideShow() {
         <img
           onAnimationEnd={handleAnimationEnd}
           ref={clonedSlideRef}
-          className="aspect-video object-cover absolute inset-0"
+          className="w-full absolute inset-0"
           src={clonedSlide.poster}
           alt=""
         />
