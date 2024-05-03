@@ -4,7 +4,7 @@ export default function GridContainer({ children, className }) {
   return (
     <div
       className={
-        "w-full grid grid-cols-2 px-5 border-l-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5" +
+        "w-full flex overflow-x-scroll overflow-y-hidden whitespace-wrap scroll-smooth p-2 lg:p-5 border-l-2 gap-3 md:gap-5 hide-scrollbar " +
         className
       }
     >

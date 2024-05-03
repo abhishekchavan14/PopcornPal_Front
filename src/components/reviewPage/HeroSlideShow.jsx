@@ -4,7 +4,7 @@ import { useNotification } from "../../hooks";
 import { FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
 import { Link } from "react-router-dom";
 import Chat from "../Chat";
-import logo from "../images/Screenpal.png"
+import logo from "../images/Screenpal.png";
 
 let count = 0;
 let intervalId;
@@ -14,7 +14,6 @@ export default function HeroSlideShow() {
   const [slide, setSlide] = useState({});
   const [clonedSlide, setClonedSlide] = useState({});
   const [slides, setSlides] = useState([]);
-  const [currentIndex, setCurrentIndex] = useState(0);
   const slideRef = useRef();
   const clonedSlideRef = useRef();
 
@@ -78,20 +77,20 @@ export default function HeroSlideShow() {
     <div className="w-full flex justify-center space-x-10">
       {/* SlideShow */}
       <div className="w-4/5 aspect-video relative overflow-hidden">
-        <Link to={"/movie/" + slide._id} className="w-full">
+        <Link to={"/movie/" + slide.id} className="w-full">
           <img
             // onAnimationEnd={handleAnimationEnd}
             ref={slideRef}
             className="w-full"
             src={slide.poster}
-            alt=""
+            alt="poster"
           />
           <div className="absolute inset-0 flex flex-col justify-end py-3 px-2 bg-gradient-to-tr from-black ">
-            <span className="text-xs md:text-3xl text-golden">
+            <span className="text-xs md:text-lg lg:text-3xl text-golden">
               {slide.title}
             </span>
             {/* <h1 className=" text-xl text-white">{slide.description}</h1> */}
-            <p className=" text-[0.25%] md:text-xl text-white">
+            <p className=" text-[0.25%] md:text-xs lg:text-xl text-white">
               {slide.description}
             </p>
           </div>
@@ -100,11 +99,11 @@ export default function HeroSlideShow() {
         <img
           onAnimationEnd={handleAnimationEnd}
           ref={clonedSlideRef}
-          className="w-full absolute inset-0"
+          className=" w-full absolute inset-0 -z-10"
           src={clonedSlide.poster}
           alt=""
         />
-        <div className=" absolute top-1/2 -translate-y-1/2 w-full flex items-center justify-between">
+        <div className="absolute top-1/2 -translate-y-1/2 w-full flex items-center justify-between">
           <button
             onClick={handleOnPrevClick}
             type="button"
@@ -126,7 +125,7 @@ export default function HeroSlideShow() {
       <div className="hidden md:block md:w-2/5 relative">
         {/* <h1 className="text-3xl text-red-300 text-center mt-0 fixed -z-1"></h1> */}
         <img src={logo} className="absolute -z-10 opacity-50" />
-        <Chat/>
+        <Chat />
       </div>
     </div>
   );
