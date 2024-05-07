@@ -35,7 +35,7 @@ export const uploadMovie = async (formData) => {
 export const getTopRatedMovies = async (type) => {
     try {
         let endpoint = '/movie/top-rated'
-        if(type) endpoint = endpoint + '?type=' + type
+        if (type) endpoint = endpoint + '?type=' + type
         const { data } = await client.get(endpoint)
         return data
     } catch (error) {
@@ -54,6 +54,15 @@ export const getLatestUploads = async (type) => {
 export const getSingleMovie = async (id) => {
     try {
         const { data } = await client.get('/movie/single/' + id)
+        return data
+    } catch (error) {
+        return { error: error.response.data.error }
+    }
+}
+
+export const getAllMovies = async () => {
+    try {
+        const { data } = await client.get('/movie/all-movies/')
         return data
     } catch (error) {
         return { error: error.response.data.error }
