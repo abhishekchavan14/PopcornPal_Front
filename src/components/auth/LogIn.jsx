@@ -28,14 +28,16 @@ export default function LogIn() {
 
   const { updateNotification } = useNotification(); //to use the notification context
   const { handleLogin, authInfo } = useAuth();
-  const {isPending, isLoggedIn} = authInfo
-  const navigate = useNavigate()
+  const { isPending, isLoggedIn } = authInfo;
+  const navigate = useNavigate();
 
-  useEffect(()=>{
-    if(isLoggedIn){
-      authInfo.profile?.role==="user"?
-      navigate('/review-movies'):navigate('/admin')}
-  },[isLoggedIn])
+  useEffect(() => {
+    if (isLoggedIn) {
+      authInfo.profile?.role === "user"
+        ? navigate("/review-movies")
+        : navigate("/admin");
+    }
+  }, [isLoggedIn]);
 
   const handleChange = ({ target }) => {
     const { name, value } = target;
@@ -49,10 +51,10 @@ export default function LogIn() {
     if (!ok) {
       return updateNotification("error", error); //'error' is the type which has to passed as a string. error is the error we get from validateUserInfo
     }
-    handleLogin(userInfo.email, userInfo.password,);
+    handleLogin(userInfo.email, userInfo.password);
   };
 
-  if(authInfo.error) alert(authInfo.error)
+  if (authInfo.error) updateNotification("error", authInfo.error);
 
   return (
     <div className="bg-[#1e1e1e] inset-0 fixed z-[-10] flex justify-center items-center">
@@ -77,7 +79,7 @@ export default function LogIn() {
             placeholder="8-20 characters long"
             type="password"
           />
-          <SubmitBtn value="Proceed" busy={isPending}/>
+          <SubmitBtn value="Proceed" busy={isPending} />
           <BottomLink goTo="/auth/reset-password">Forgot Password?</BottomLink>
         </form>
       </Container>
