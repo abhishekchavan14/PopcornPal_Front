@@ -17,7 +17,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="bg-primary py-4 pl-2 md:pl-10 shadow-md shadow-black">
+    <div className="bg-primary p-4 md:pl-10 shadow-md shadow-black">
       <div className="flex items-center justify-between">
         {isLoggedIn ? (
           <Link
@@ -95,7 +95,9 @@ export default function Navbar() {
         {/*till this was the navbar for large devices*/}
         {/*------------------------------------------------------------------------------------------------------------------------------------*/}
         {/*below is the menu bar that is only for smaller devices*/}
-        <SearchField classname=" w-[30%] md:hidden z-10"/>
+        {isLoggedIn ? (
+          <SearchField classname=" w-[30%] md:hidden z-10" />
+        ) : null}
         <button
           className=" text-white justify-end mr-2 right-5 bg-secondary p-1 rounded-md block md:hidden"
           onClick={handleMenuClick}
@@ -115,16 +117,22 @@ export default function Navbar() {
         >
           <ul>
             <li className="p-4 border-b border-gray-600 delay-75 duration-300 ease-in mt-2">
-              <Link to="/">Home</Link>
+              <Link to="/" onClick={handleMenuClick}>
+                Home
+              </Link>
             </li>
             <li className="p-4 border-b border-gray-600 delay-75 duration-300 ease-in mt-2">
-              <Link to="/auth/sign-up">Sign Up</Link>
+              <Link to="/auth/sign-up" onClick={handleMenuClick}>
+                Sign Up
+              </Link>
             </li>
             <li className="p-4 border-b border-gray-600 delay-100 duration-300 ease-in">
               {isLoggedIn ? (
                 <button onClick={handleLogout}>Log Out</button>
               ) : (
-                <Link to="/auth/log-in">Log In</Link>
+                <Link to="/auth/log-in" onClick={handleMenuClick}>
+                  Log In
+                </Link>
               )}
             </li>
           </ul>

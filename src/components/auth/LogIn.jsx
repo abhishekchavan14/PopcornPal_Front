@@ -12,7 +12,7 @@ const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const passwordRegex = /^.{8,20}$/;
 
 const validateUserInfo = ({ email, password }) => {
-  if (!emailRegex.test(email)) {
+  if (!emailRegex.test(email.trim())) {
     return { ok: false, error: "Invalid Email ID!" };
   }
   if (!passwordRegex.test(password)) {

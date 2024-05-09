@@ -30,7 +30,7 @@ export default function NotificationProvider({ children }) {
   const isMobile = window.innerWidth <= 768; // Assuming mobile breakpoint at 768px
 
   const notificationStyle = isMobile
-    ? { top: "5%", left: "50%", transform: "translateX(-50%)" }
+    ? { top: "10%", left: "50%", transform: "translateX(-50%)" }
     : { bottom: "5%", right: "5%", marginBottom: "20px" };
 
   return (
@@ -40,7 +40,7 @@ export default function NotificationProvider({ children }) {
         className="fixed z-[3]"
         style={notificationStyle}
       >
-        <div className={`p-4 ${notificationClass} rounded-xl popup z-50`}>
+        <div className={`p-4 ${notificationClass} rounded-xl z-50`}>
           <p>{notification}</p>
         </div>
       </div>
