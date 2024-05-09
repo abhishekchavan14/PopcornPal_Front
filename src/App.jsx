@@ -13,6 +13,7 @@ import ReviewPage from "./components/reviewPage/ReviewPage";
 import { useAuth } from "./hooks";
 import SingleMovie from "./components/reviewPage/SingleMovie";
 import MovieReviews from "./components/reviewPage/MovieReviews";
+import ResendOTP from "./components/auth/ResendOTP";
 
 export default function App() {
   return (
