@@ -6,6 +6,7 @@ import SubmitBtn from "../form/SubmitBtn";
 import Footer from "../Footer";
 import { verifyUserEmail } from "../../api/auth";
 import { useNotification } from "../../hooks";
+import BottomLink from "../form/BottomLink";
 
 export default function EmailVerification() {
   const [otp, setOtp] = useState(""); //initializing an empty otp array
@@ -44,7 +45,7 @@ export default function EmailVerification() {
     //if valid - submit OTP
     const response = await verifyUserEmail({ userID: user.id, OTP: otp });
     if(response.error) return updateNotification('error',response.error)
-    updateNotification('success',response.message)
+    updateNotification('success',response.message, "/auth/log-in")
     // navigate('/auth/log-in')
   };
 
@@ -59,16 +60,6 @@ export default function EmailVerification() {
           <p className="text-white text-sm text-center">
             OTP has been sent to your mail!
           </p>
-
-          {/* <div className="mt-6 mb-10 flex justify-between items-center">
-            {
-              otp.map((_, index) => {
-                return (
-                  <input type="number" className="bg-transparent border md:w-10 md:h-10 w-5 h-5 outline-none focus:border-primary-red duration-300 text-white text-center text-xl rounded" />
-                );
-              })
-            }
-          </div> */}
           <input
             ref={inputRef}
             type="number"
@@ -77,6 +68,7 @@ export default function EmailVerification() {
           />
 
           <SubmitBtn value="Verify OTP" />
+          <BottomLink goTo="/auth/resend-otp">Resend OTP</BottomLink>
         </form>
       </Container>
       <Footer />

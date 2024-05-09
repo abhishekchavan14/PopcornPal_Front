@@ -28,6 +28,7 @@ export default function App() {
           path="/auth/email-verification"
           element={<EmailVerification />}
         />
+        <Route path="/auth/resend-otp" element={<ResendOTP />} />
         <Route path="/admin" element={<Admin />} />
         <Route path="/review-movies" element={<ReviewPage />} />
         <Route path="/movie/:movieId" element={<SingleMovie />} />

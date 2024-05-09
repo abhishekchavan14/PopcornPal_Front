@@ -22,6 +22,17 @@ export const verifyUserEmail = async (userInfo) => {
     }
 
 }
+
+export const resendOTP = async (userInfo) => {
+    try {
+        const { data } = await client.post('/user/resend-otp', userInfo)
+        return data
+    } catch (error) {
+        return { error: error.response.data.error }
+    }
+
+}
+
 export const forgetPassword = async (userInfo) => {
     try {
         const { data } = await client.post('/user/forget-password', userInfo)

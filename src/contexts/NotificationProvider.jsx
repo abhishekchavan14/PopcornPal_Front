@@ -1,12 +1,14 @@
 import React, { createContext, useState } from "react";
+import { Link } from "react-router-dom";
 
 export const NotificationContext = createContext();
 
 export default function NotificationProvider({ children }) {
   const [notification, setNotification] = useState("");
+  const [notificationURL, setNotificationURL] = useState("");
   const [notificationClass, setNotificationClass] = useState("");
 
-  const updateNotification = (type, value) => {
+  const updateNotification = (type, value, url = "") => {
     switch (type) {
       case "error":
         setNotificationClass("bg-red-500");
@@ -21,6 +23,7 @@ export default function NotificationProvider({ children }) {
         setNotificationClass("bg-red-500");
     }
     setNotification(value);
+    setNotificationURL(url);
     setTimeout(() => {
       setNotificationClass("hidden");
     }, 3000);
@@ -36,12 +39,14 @@ export default function NotificationProvider({ children }) {
   return (
     <NotificationContext.Provider value={{ updateNotification }}>
       {children}
-      <div
-        className="fixed z-[3]"
-        style={notificationStyle}
-      >
+      <div className="fixed z-[3]" style={notificationStyle}>
         <div className={`p-4 ${notificationClass} rounded-xl z-50`}>
           <p>{notification}</p>
+          {notificationURL && (
+            <Link to={notificationURL} className="text-blue underline">
+              Click Here
+            </Link>
+          )}
         </div>
       </div>
     </NotificationContext.Provider>

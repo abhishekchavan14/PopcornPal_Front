@@ -55,6 +55,7 @@ export default function LogIn() {
   };
 
   if (authInfo.error) updateNotification("error", authInfo.error);
+  if (authInfo.error === "Please Verify your Email.") updateNotification("error", authInfo.error, "/auth/resend-otp");
 
   return (
     <div className="bg-[#1e1e1e] inset-0 fixed z-[-10] flex justify-center items-center">
