@@ -152,7 +152,7 @@ export default function Navbar() {
   );
 }
 
-const Profile = async ({ visible }) => {
+const Profile = ({ visible }) => {
   const { authInfo, handleLogout } = useAuth();
   const { profile } = authInfo;
   // await getReviewsByOwner(profile.id);
