@@ -2,7 +2,6 @@ import React from "react";
 import GridContainer from "./GridContainer";
 import { Link } from "react-router-dom";
 import RatingStar from "./RatingStar";
-import { FiArrowLeftCircle, FiArrowRightCircle } from "react-icons/fi";
 
 const trimTitle = (text = "") => {
   if (text.length <= 20) return text;

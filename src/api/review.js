@@ -2,7 +2,6 @@
 import client from "./client"
 
 export const addReview = async (movieId, reviewData) => {
-    console.log("API....",movieId, reviewData)
     const token = localStorage.getItem("auth-token")
     try {
         const { data } = await client.post(`/review/add/${movieId}`, reviewData, {
@@ -28,7 +27,7 @@ export const getReviewsByMovie = async (movieId) => {
 export const addUpvote = async (movieId, reviewID, ownerID) => {
     const token = localStorage.getItem("auth-token")
     try {
-        const { data } = await client.post(`/review/add-upvote/${movieId}/${reviewID}`, {ownerID}, {
+        const { data } = await client.post(`/review/add-upvote/${movieId}/${reviewID}`, { ownerID }, {
             headers: {
                 authorization: "Bearer " + token,
             },
@@ -41,7 +40,36 @@ export const addUpvote = async (movieId, reviewID, ownerID) => {
 export const addDownvote = async (movieId, reviewID, ownerID) => {
     const token = localStorage.getItem("auth-token")
     try {
-        const { data } = await client.post(`/review/add-downvote/${movieId}/${reviewID}`, {ownerID}, {
+        const { data } = await client.post(`/review/add-downvote/${movieId}/${reviewID}`, { ownerID }, {
+            headers: {
+                authorization: "Bearer " + token,
+            },
+        })
+        return data
+    } catch (error) {
+        return error
+    }
+}
+
+export const updateReview = async (reviewID, content) => {
+    const token = localStorage.getItem("auth-token")
+    try {
+        const { data } = await client.patch(`/review/update/${reviewID}`, { content }, {
+            headers: {
+                authorization: "Bearer " + token,
+            },
+        })
+        return data
+    } catch (error) {
+        console.log("ERROR>>>", error)
+        return error
+    }
+}
+
+export const removeReview = async (reviewID) => {
+    const token = localStorage.getItem("auth-token")
+    try {
+        const { data } = await client.delete(`/review/delete/${reviewID}`, {
             headers: {
                 authorization: "Bearer " + token,
             },

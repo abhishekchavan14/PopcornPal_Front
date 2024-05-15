@@ -64,7 +64,6 @@ export default function SingleMovie() {
   };
 
   const handleSubmit = async (data) => {
-    console.log("handleSubmit....",data)
     const { error, message } = await addReview(movieId, data);
     if (error) return updateNotification("error", error);
 

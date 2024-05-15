@@ -1,12 +1,21 @@
 import React, { useEffect, useState } from "react";
 import RatingStar from "./RatingStar";
 import { Link, useParams } from "react-router-dom";
-import { addDownvote, addUpvote, getReviewsByMovie } from "../../api/review";
-import { useNotification } from "../../hooks";
+import {
+  addDownvote,
+  addUpvote,
+  getReviewsByMovie,
+  removeReview,
+  updateReview,
+} from "../../api/review";
+import { useAuth, useNotification } from "../../hooks";
 import { getSingleMovie } from "../../api/movie";
 import { BiUpvote, BiDownvote } from "react-icons/bi";
 import { PiPopcornFill } from "react-icons/pi";
 import { VscLoading } from "react-icons/vsc";
+import { CiEdit } from "react-icons/ci";
+import { MdDelete } from "react-icons/md";
+import Filter from "bad-words";
 
 export default function MovieReviews() {
   const [reviews, setReviews] = useState([]);
@@ -69,6 +78,8 @@ export default function MovieReviews() {
   );
 }
 const ReviewCard = ({ review }) => {
+  const { authInfo } = useAuth();
+  const loggedInUserID = authInfo.profile.id;
   const { owner, content, rating, upvotes, downvotes, id, reviewTag } = review;
   const ownerID = owner.id;
   const reviewID = id;
@@ -79,6 +90,8 @@ const ReviewCard = ({ review }) => {
   const [hasUpvoted, setHasUpvoted] = useState(false);
   const [hasDownvoted, setHasDownvoted] = useState(false);
   const [reviewColor, setReviewColor] = useState("text-dark-subtle");
+  const [editContainerVisible, setEditContainerVisible] = useState(false);
+  const [deleteContainerVisible, setDeleteContainerVisible] = useState(false);
   const { updateNotification } = useNotification();
   const handleUpvote = async () => {
     if (!hasUpvoted && !hasDownvoted) {
@@ -118,48 +131,163 @@ const ReviewCard = ({ review }) => {
         break;
     }
   };
+
+  const handleEditClick = () => {
+    setEditContainerVisible(true);
+  };
+  const handleDeleteClick = () => {
+    setDeleteContainerVisible(true);
+  };
+  const handleEditSubmit = async (text) => {
+    const filter = new Filter();
+    const content = filter.clean(text)
+    const { error, message } = await updateReview(reviewID, content);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", message);
+    setEditContainerVisible(false);
+    // window.location.reload();
+  };
+
+  const handleDeleteSubmit = async (deleteReview) => {
+    if (deleteReview === true) {
+      const { error, message } = await removeReview(reviewID);
+      if (error) return updateNotification("error", error);
+      updateNotification("success", message);
+      setDeleteContainerVisible(false);
+      window.location.reload();
+    } else {
+      setDeleteContainerVisible(false);
+    }
+  };
+
   useEffect(() => {
     // Check review tag only once, after component mount
     checkReviewTag(reviewTag);
   }, []);
 
   return (
-    <div className="border-b-4 border-dark-subtle my-5 p-4 flex justify-between">
-      <div className="w-[80%]">
-        <div className="flex">
-          <div className="border border-primary-red rounded-full w-10 h-10 flex justify-center items-center text-xl ">
-            {owner.username ? owner.username[0].toUpperCase() : ""}
+    <>
+      {editContainerVisible ? (
+        <>
+          <div>
+            <EditContainer content={content} onSubmit={handleEditSubmit} />
           </div>
-          <div className="flex items-center">
-            <h1 className="mx-2">{owner.username}</h1>
-            <h1 className="mx-2 text-golden">{rating}</h1>
-            <PiPopcornFill className="text-golden" />
+        </>
+      ) : deleteContainerVisible ? (
+        <>
+          <div>
+            <DeleteContainer onSubmit={handleDeleteSubmit} />
+          </div>
+        </>
+      ) : (
+        <div className="border-b-4 border-dark-subtle my-5 p-4 flex justify-between">
+          <div className="w-[80%]">
+            <div className="flex items-center">
+              <div className="border border-primary-red rounded-full min-w-10 min-h-10 flex justify-center items-center text-xl ">
+                {owner.username ? owner.username[0].toUpperCase() : ""}
+              </div>
+              <div className="flex items-center">
+                <h1 className="mx-2">{owner.username}</h1>
+                <h1 className="text-golden">{rating}</h1>
+                <PiPopcornFill className="text-golden" />
+              </div>
+            </div>
+            <p className={` ${reviewColor} text-sm mt-2`}>{content}</p>
+            {ownerID === loggedInUserID ? (
+              <div className="text-lg py-2 flex space-x-3">
+                <CiEdit onClick={handleEditClick} />
+                <MdDelete onClick={handleDeleteClick} />
+              </div>
+            ) : null}
+          </div>
+          <div className="w-[15%] flex justify-center items-center">
+            <div className="flex flex-col justify-center items-center text-xl space-y-2">
+              <BiUpvote
+                className={`hover:text-green duration-200 cursor-pointer ${
+                  hasUpvoted ? "text-green" : ""
+                }`}
+                onClick={handleUpvote}
+                disabled={hasUpvoted || hasDownvoted}
+              />
+              <BiDownvote
+                className={`hover:text-red-400 duration-200 cursor-pointer ${
+                  hasDownvoted ? "text-red-400" : ""
+                }`}
+                onClick={handleDownvote}
+                disabled={hasUpvoted || hasDownvoted}
+              />
+            </div>
+            <div>
+              <p>{reviewUpvotes}</p>
+              <p>{reviewDownvotes}</p>
+            </div>
           </div>
         </div>
-        <p className={` ${reviewColor} text-sm mt-2`}>{content}</p>
+      )}
+    </>
+  );
+};
+
+const EditContainer = ({ content, onSubmit }) => {
+  const [text, setText] = useState(content);
+  const handleChange = (e) => {
+    setText(e.target.value);
+  };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(text);
+  };
+  return (
+    <>
+      <div className="w-full flex flex-col justify-center items-center lg:w-[80%] m-auto">
+        <p className="text-xl">Edit Review</p>
+        <textarea
+          value={text}
+          className="text-white p-3 w-full h-36 outline-none bg-white bg-opacity-50 m-1 resize-none"
+          onChange={handleChange}
+        ></textarea>
+        <button
+          className="border border-green p-2 m-2 hover:bg-green hover:text-black duration-200"
+          onClick={handleSubmit}
+        >
+          Submit
+        </button>
       </div>
-      <div className="w-[15%] flex justify-center items-center">
-        <div className="flex flex-col justify-center items-center text-xl space-y-2">
-          <BiUpvote
-            className={`hover:text-green duration-200 cursor-pointer ${
-              hasUpvoted ? "text-green" : ""
-            }`}
-            onClick={handleUpvote}
-            disabled={hasUpvoted || hasDownvoted}
-          />
-          <BiDownvote
-            className={`hover:text-red-400 duration-200 cursor-pointer ${
-              hasDownvoted ? "text-red-400" : ""
-            }`}
-            onClick={handleDownvote}
-            disabled={hasUpvoted || hasDownvoted}
-          />
-        </div>
-        <div>
-          <p>{reviewUpvotes}</p>
-          <p>{reviewDownvotes}</p>
+    </>
+  );
+};
+const DeleteContainer = ({ onSubmit }) => {
+  const [deleteReview, setDeleteReview] = useState(false);
+  const handleCancel = () => {
+    onSubmit(deleteReview);
+  };
+  const handleDelete = () => {
+    setDeleteReview((prev) => {
+      onSubmit(!prev);
+      return !prev;
+    });
+  };
+  return (
+    <>
+      <div className="w-full lg:w-[80%] m-auto flex flex-col justify-center items-center">
+        <p className="text-xl text-red-600 text-center">
+          Do you really want to delete this review?
+        </p>
+        <div className="flex space-x-10 m-4">
+          <button
+            className="border hover:bg-white hover:text-black duration-200 p-2 "
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+          <button
+            className="border border-red-600 hover:bg-red-600 duration-200 p-2"
+            onClick={handleDelete}
+          >
+            Delete
+          </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
