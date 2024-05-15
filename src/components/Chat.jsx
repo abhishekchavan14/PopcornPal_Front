@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import client from "../api/client";
+import SubmitBtn from "./form/SubmitBtn";
 
 export default function Chat() {
   const [message, setMessage] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
+  const [isPending, setIsPending] = useState(false);
   const chatContainerRef = useRef(null);
 
   useEffect(() => {
@@ -30,19 +32,19 @@ export default function Chat() {
   };
 
   const handleSubmit = async (e) => {
+    setIsPending(true);
     e.preventDefault();
     try {
       const { data } = await client.post("/user/chat", { message });
-      // setChatResponse(data.message);
-      // setDisplayMessage(message);
-      // Update chat history with the new message and response
       setChatHistory([
         ...chatHistory,
         { user: true, message },
         { user: false, message: data.message },
       ]);
+      setIsPending(false);
     } catch (error) {
       console.error("Error submitting message:", error);
+      setIsPending(false);
     }
     setMessage(""); // Clear the input field after submitting
   };
@@ -50,7 +52,7 @@ export default function Chat() {
   return (
     <div className="flex flex-col justify-center items-center">
       <div className="absolute bg-primary p-2 w-[100%] text-center text-xs bottom-0">
-        <form onSubmit={handleSubmit}>
+        <form>
           <input
             type="text"
             value={message}
@@ -58,15 +60,13 @@ export default function Chat() {
             className="mr-2 indent-1 p-2 outline-none border border-gray-300 rounded-lg w-[70%]"
             placeholder="Tell me a good horror movie."
           />
-          <button
-            type="submit"
-            className=" bg-green p-2 rounded-lg hover:bg-dark-green duration-200"
-          >
-            Ask me!
-          </button>
+          <SubmitBtn onclick={handleSubmit} value="Ask me!" busy={isPending} />
         </form>
       </div>
-      <div className="w-[100%] overflow-y-auto max-h-[380px]" ref={chatContainerRef}>
+      <div
+        className="w-[100%] overflow-y-auto max-h-[380px]"
+        ref={chatContainerRef}
+      >
         <div className="p-2">
           {chatHistory.map((chat, index) => (
             <div key={index} className="my-2 text-xs bg-white bg-opacity">

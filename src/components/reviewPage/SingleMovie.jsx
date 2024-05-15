@@ -69,6 +69,7 @@ export default function SingleMovie() {
 
     updateNotification("success", message);
     handleAddReview();
+    window.location.reload();
   };
 
   return (

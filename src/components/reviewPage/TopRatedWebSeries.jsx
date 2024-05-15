@@ -19,5 +19,5 @@ export default function TopRatedWebSeries() {
     fetchMovies();
   }, []);
 
-  return <MovieList movies={movies} title="Top Rated Web Series:" />;
+  return <MovieList movies={movies} title="Top Rated TV Shows:" />;
 }

@@ -16,6 +16,7 @@ import { VscLoading } from "react-icons/vsc";
 import { CiEdit } from "react-icons/ci";
 import { MdDelete } from "react-icons/md";
 import Filter from "bad-words";
+import SubmitBtn from "../form/SubmitBtn";
 
 export default function MovieReviews() {
   const [reviews, setReviews] = useState([]);
@@ -79,7 +80,7 @@ export default function MovieReviews() {
 }
 const ReviewCard = ({ review }) => {
   const { authInfo } = useAuth();
-  const loggedInUserID = authInfo.profile.id;
+  const loggedInUserID = authInfo?.profile?.id;
   const { owner, content, rating, upvotes, downvotes, id, reviewTag } = review;
   const ownerID = owner.id;
   const reviewID = id;
@@ -196,8 +197,8 @@ const ReviewCard = ({ review }) => {
             <p className={` ${reviewColor} text-sm mt-2`}>{content}</p>
             {ownerID === loggedInUserID ? (
               <div className="text-lg py-2 flex space-x-3">
-                <CiEdit onClick={handleEditClick} />
-                <MdDelete onClick={handleDeleteClick} />
+                <CiEdit onClick={handleEditClick} className=" hover:text-dark-subtle cursor-pointer duration-300"/>
+                <MdDelete onClick={handleDeleteClick} className=" hover:text-primary-red cursor-pointer duration-200" />
               </div>
             ) : null}
           </div>
@@ -231,11 +232,13 @@ const ReviewCard = ({ review }) => {
 
 const EditContainer = ({ content, onSubmit }) => {
   const [text, setText] = useState(content);
+  const [isPending, setIsPending] = useState(false);
   const handleChange = (e) => {
     setText(e.target.value);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    setIsPending(true)
     onSubmit(text);
   };
   return (
@@ -247,22 +250,19 @@ const EditContainer = ({ content, onSubmit }) => {
           className="text-white p-3 w-full h-36 outline-none bg-white bg-opacity-50 m-1 resize-none"
           onChange={handleChange}
         ></textarea>
-        <button
-          className="border border-green p-2 m-2 hover:bg-green hover:text-black duration-200"
-          onClick={handleSubmit}
-        >
-          Submit
-        </button>
+        <SubmitBtn value="Submit"  onclick={handleSubmit} busy={isPending} />
       </div>
     </>
   );
 };
 const DeleteContainer = ({ onSubmit }) => {
   const [deleteReview, setDeleteReview] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const handleCancel = () => {
     onSubmit(deleteReview);
   };
   const handleDelete = () => {
+    setIsPending(true)
     setDeleteReview((prev) => {
       onSubmit(!prev);
       return !prev;
@@ -281,12 +281,7 @@ const DeleteContainer = ({ onSubmit }) => {
           >
             Cancel
           </button>
-          <button
-            className="border border-red-600 hover:bg-red-600 duration-200 p-2"
-            onClick={handleDelete}
-          >
-            Delete
-          </button>
+          <SubmitBtn value="Confirm" onclick={handleDelete} busy={isPending} />
         </div>
       </div>
     </>
