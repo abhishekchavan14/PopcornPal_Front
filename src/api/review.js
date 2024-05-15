@@ -52,6 +52,7 @@ export const addDownvote = async (movieId, reviewID, ownerID) => {
 }
 
 export const updateReview = async (reviewID, content) => {
+    console.log("API", content)
     const token = localStorage.getItem("auth-token")
     try {
         const { data } = await client.patch(`/review/update/${reviewID}`, { content }, {

@@ -141,6 +141,7 @@ const ReviewCard = ({ review }) => {
   const handleEditSubmit = async (text) => {
     const filter = new Filter();
     const content = filter.clean(text)
+    console.log("FILTERED...", content)
     const { error, message } = await updateReview(reviewID, content);
     if (error) return updateNotification("error", error);
     updateNotification("success", message);
