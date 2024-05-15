@@ -57,8 +57,6 @@ export default function SignUp() {
       state: { user: response.user },
       replace: true,
     });
-
-    console.log(response.user);
   };
 
   const { authInfo } = useAuth();

@@ -2,6 +2,7 @@
 import client from "./client"
 
 export const addReview = async (movieId, reviewData) => {
+    console.log("API....",movieId, reviewData)
     const token = localStorage.getItem("auth-token")
     try {
         const { data } = await client.post(`/review/add/${movieId}`, reviewData, {
