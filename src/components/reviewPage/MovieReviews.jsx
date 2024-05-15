@@ -146,7 +146,7 @@ const ReviewCard = ({ review }) => {
     if (error) return updateNotification("error", error);
     updateNotification("success", message);
     setEditContainerVisible(false);
-    // window.location.reload();
+    window.location.reload();
   };
 
   const handleDeleteSubmit = async (deleteReview) => {
