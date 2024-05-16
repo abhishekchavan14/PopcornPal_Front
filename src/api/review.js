@@ -23,14 +23,14 @@ export const getReviewsByMovie = async (movieId) => {
         return error
     }
 }
-// export const getReviewsByOwner = async (userId) => {
-//     try {
-//         const { data } = await client.get(`/review/get-reviews-by-owner/${userId}`)
-//         return data
-//     } catch (error) {
-//         return error
-//     }
-// }
+export const getReviewsByOwner = async (userId) => {
+    try {
+        const { data } = await client.get(`/review/get-reviews-by-owner/${userId}`)
+        return data
+    } catch (error) {
+        return error
+    }
+}
 
 export const addUpvote = async (movieId, reviewID, ownerID) => {
     const token = localStorage.getItem("auth-token")

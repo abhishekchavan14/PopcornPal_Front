@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { IoMdMenu, IoMdClose } from "react-icons/io";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../hooks";
 import SearchField from "./SearchField";
 import { CgProfile } from "react-icons/cg";
-// import { getReviewsByOwner } from "../api/review";
+import { getReviewsByOwner } from "../api/review";
 
 export default function Navbar() {
   const location = useLocation(); //used in keeping the Home,About etc in Navbar active when we on that corresponding path
@@ -72,21 +72,15 @@ export default function Navbar() {
             {isLoggedIn ? (
               <div className="flex items-center space-x-4">
                 <SearchField />
-                <button
-                  onClick={handleLogout}
-                  className={
-                    location.pathname === "/"
-                      ? "text-primary-red"
-                      : "text-white hover:text-primary-red duration-300 cursor-pointer"
-                  }
-                >
-                  Log Out
-                </button>
                 <CgProfile
                   className="text-3xl text-white hover:text-primary-red duration-300 cursor-pointer"
                   onClick={handleProfileClick}
                 />
-                <Profile visible={displayProfile} />
+                <Profile
+                  visible={displayProfile}
+                  username={authInfo.profile.username}
+                  email={authInfo.profile.email}
+                />
               </div>
             ) : (
               <Link
@@ -132,9 +126,13 @@ export default function Navbar() {
               </Link>
             </li>
             <li className="p-4 border-b border-gray-600 delay-75 duration-300 ease-in mt-2">
-              <Link to="/auth/sign-up" onClick={handleMenuClick}>
-                Sign Up
-              </Link>
+              {isLoggedIn ? (
+                <button onClick={handleProfileClick}>Account</button>
+              ) : (
+                <Link to="/auth/sign-up" onClick={handleMenuClick}>
+                  Sign Up
+                </Link>
+              )}
             </li>
             <li className="p-4 border-b border-gray-600 delay-100 duration-300 ease-in">
               {isLoggedIn ? (
@@ -152,20 +150,52 @@ export default function Navbar() {
   );
 }
 
-const Profile = ({ visible }) => {
+const Profile = ({ visible, username, email }) => {
   const { authInfo, handleLogout } = useAuth();
-  const { profile } = authInfo;
-  // await getReviewsByOwner(profile.id);
+  const [reviewArray, setReviewArray] = useState([]);
+
+  useEffect(() => {
+    async function getReviews() {
+      const { error, reviews } = await getReviewsByOwner(authInfo.profile.id);
+      if (error) console.log(error);
+      setReviewArray(reviews);
+    }
+    getReviews();
+  }, []);
+  console.log(reviewArray);
   {
-    return visible ? (
+    return (
       <>
-        <div className="w-[20%] h-screen bg-dark-grey flex flex-col space-y-5 py-16 items-center absolute top-20 shadow-xl shadow-black right-0 text-white duration-500">
+        <div
+          className={`w-[20%] h-screen bg-dark-grey flex flex-col space-y-3 py-4 items-center absolute top-20 shadow-xl shadow-black text-white duration-300 ${
+            visible ? "right-0 " : "right-[-100%] "
+          } `}
+        >
           <CgProfile className="text-8xl text-dark-subtle" />
           <div className="flex flex-col items-center">
-            <p className="text-3xl">{profile.username}</p>
-            <p className="text-sm italic">{profile.email}</p>
+            <p className="text-3xl">{username}</p>
+            <p className="text-sm italic">{email}</p>
           </div>
-          <div>Reviewed 100 movies</div>
+          <div className="h-[40%] w-full p-2">
+            <p className="">Your reviews:</p>
+            <div className="h-[60%] overflow-y-scroll border-l px-1 hide-scrollbar mb-2">
+              {reviewArray
+                .sort((a, b) => b.upvotes - a.upvotes)
+                .map((r) => {
+                  return (
+                    <div>
+                      <Link className="text-golden text-xs border-b">
+                        {r.content} | {r.upvotes}
+                      </Link>
+                    </div>
+                  );
+                })}
+            </div>
+            <div>
+              <p>Liked by you:</p>
+            </div>
+          </div>
+
           <div className="border py-2 px-4">
             <button
               onClick={handleLogout}
@@ -179,10 +209,6 @@ const Profile = ({ visible }) => {
             </button>
           </div>
         </div>
-      </>
-    ) : (
-      <>
-        <div className="w-[20%] h-screen bg-dark-grey flex flex-col justify-center items-center absolute top-20 right-[-100%] text-white duration-500"></div>
       </>
     );
   }
