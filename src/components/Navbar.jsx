@@ -21,6 +21,7 @@ export default function Navbar() {
   }
   const handleProfileClick = () => {
     setDisplayProfile((prev) => !prev);
+    handleMenuClick();
   };
   return (
     <div className="bg-primary p-4 md:pl-10 shadow-md shadow-black">
@@ -128,7 +129,9 @@ export default function Navbar() {
             </li>
             <li className="p-4 border-b border-gray-600 delay-75 duration-300 ease-in mt-2">
               {isLoggedIn ? (
-                <button onClick={handleProfileClick}>Account</button>
+                <Link to="/account" onClick={handleProfileClick}>
+                  Account
+                </Link>
               ) : (
                 <Link to="/auth/sign-up" onClick={handleMenuClick}>
                   Sign Up

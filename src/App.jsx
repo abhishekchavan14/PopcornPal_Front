@@ -14,6 +14,7 @@ import { useAuth } from "./hooks";
 import SingleMovie from "./components/reviewPage/SingleMovie";
 import MovieReviews from "./components/reviewPage/MovieReviews";
 import ResendOTP from "./components/auth/ResendOTP";
+import Account from "./components/Account";
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
         />
         <Route path="/auth/resend-otp" element={<ResendOTP />} />
         <Route path="/admin" element={<Admin />} />
+        <Route path="/account" element={<Account />} />
         <Route path="/review-movies" element={<ReviewPage />} />
         <Route path="/movie/:movieId" element={<SingleMovie />} />
         <Route path="/movie/reviews/:movieId" element={<MovieReviews />} />
