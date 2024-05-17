@@ -66,7 +66,6 @@ export default function SingleMovie() {
   };
 
   const handleSubmit = async (data) => {
-    console.log("handleSubmit...", data);
     const { error, message } = await addReview(movieId, data);
     if (error) return updateNotification("error", error);
 
@@ -91,10 +90,10 @@ export default function SingleMovie() {
         <video controls poster={poster} src={trailer}></video>
         <div className="flex mt-4 border-t pt-4 justify-between">
           <div className="w-[70%] md:w-[80%]">
-            <div className="flex items-center mb-4 ">
-              <h1 className="text-xl md:text-4xl text-golden ">{title}</h1>
+            <div className=" items-center mb-4 ">
+              <h1 className="text-xl md:text-4xl text-golden flex ">{title}</h1>
               <MdFavorite
-                className={`text-xl lg:text-3xl ml-2 lg:ml-4 hover:text-primary-red cursor-pointer duration-200 ${
+                className={`text-xl lg:text-4xl hover:text-primary-red cursor-pointer duration-200 ${
                   authInfo.profile?.likedMovies?.includes(movieId)
                     ? "text-primary-red "
                     : "text-white "
