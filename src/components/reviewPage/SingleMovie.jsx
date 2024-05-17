@@ -78,6 +78,7 @@ export default function SingleMovie() {
     if (error) return updateNotification("error", error);
     updateNotification("success", message);
   };
+  
   return (
     <>
       <div
@@ -94,7 +95,7 @@ export default function SingleMovie() {
               <h1 className="text-xl md:text-4xl text-golden ">{title}</h1>
               <MdFavorite
                 className={`text-xl lg:text-3xl ml-2 lg:ml-4 hover:text-primary-red cursor-pointer duration-200 ${
-                  authInfo.profile.likedMovies.includes(movieId)
+                  authInfo.profile?.likedMovies?.includes(movieId)
                     ? "text-primary-red "
                     : "text-white "
                 }`}
