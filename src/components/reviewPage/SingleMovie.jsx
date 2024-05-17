@@ -78,7 +78,7 @@ export default function SingleMovie() {
     if (error) return updateNotification("error", error);
     updateNotification("success", message);
   };
-  
+
   return (
     <>
       <div
