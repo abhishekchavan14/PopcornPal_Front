@@ -6,6 +6,7 @@ import { useAuth } from "../hooks";
 import SearchField from "./SearchField";
 import { CgProfile } from "react-icons/cg";
 import { getReviewsByOwner } from "../api/review";
+import { getMovieNamesFromIds } from "../api/movie";
 
 export default function Navbar() {
   const location = useLocation(); //used in keeping the Home,About etc in Navbar active when we on that corresponding path
@@ -153,7 +154,15 @@ export default function Navbar() {
 const Profile = ({ visible, username, email }) => {
   const { authInfo, handleLogout } = useAuth();
   const [reviewArray, setReviewArray] = useState([]);
+  const [likedMovieNames, setLikedMovieNames] = useState([]);
 
+  const getArrayOfLikedMovieNames = async () => {
+    const { error, movieNameArray } = await getMovieNamesFromIds(
+      authInfo.profile.likedMovies
+    );
+    if (error) return console.log(error);
+    setLikedMovieNames(movieNameArray);
+  };
   useEffect(() => {
     async function getReviews() {
       const { error, reviews } = await getReviewsByOwner(authInfo.profile.id);
@@ -161,8 +170,9 @@ const Profile = ({ visible, username, email }) => {
       setReviewArray(reviews);
     }
     getReviews();
+    getArrayOfLikedMovieNames();
   }, []);
-  console.log(reviewArray);
+
   {
     return (
       <>
@@ -176,27 +186,44 @@ const Profile = ({ visible, username, email }) => {
             <p className="text-3xl">{username}</p>
             <p className="text-sm italic">{email}</p>
           </div>
-          <div className="h-[40%] w-full p-2">
-            <p className="">Your reviews:</p>
-            <div className="h-[60%] overflow-y-scroll border-l px-1 hide-scrollbar mb-2">
+          <div className="max-h-[40%] w-full p-2">
+            <p className="">💬Your reviews:</p>
+            <div className="max-h-[60%] overflow-y-scroll border-l px-1 hide-scrollbar mb-2">
               {reviewArray
                 .sort((a, b) => b.upvotes - a.upvotes)
                 .map((r) => {
                   return (
-                    <div>
-                      <Link className="text-golden text-xs border-b">
+                    <div key={r.id}>
+                      <Link
+                        to={"/movie/reviews/" + r.parentMovie}
+                        className="text-golden text-xs border-b"
+                      >
                         {r.content} | {r.upvotes}
                       </Link>
                     </div>
                   );
                 })}
             </div>
-            <div>
-              <p>Liked by you:</p>
+          </div>
+          <div className="max-h-[40%] w-full p-2">
+            <p className="">❤️Liked by you:</p>
+            <div className="max-h-[60%] overflow-y-scroll border-l px-1 hide-scrollbar mb-2">
+              {likedMovieNames.map((m) => {
+                return (
+                  <div key={m.id}>
+                    <Link
+                      to={"/movie/" + m.id}
+                      className="text-golden text-xs border-b my-3"
+                    >
+                      {m.title}
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          <div className="border py-2 px-4">
+          <div className="border py-2 px-8 absolute bottom-36">
             <button
               onClick={handleLogout}
               className={

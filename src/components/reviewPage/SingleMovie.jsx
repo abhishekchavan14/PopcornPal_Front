@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { getSingleMovie } from "../../api/movie";
-import { useNotification } from "../../hooks";
+import { getSingleMovie, updateMovieLike } from "../../api/movie";
+import { useAuth, useNotification } from "../../hooks";
 import { Link, useParams } from "react-router-dom";
 import { VscLoading } from "react-icons/vsc";
 import RatingStar from "./RatingStar";
 import AddRatingModal from "./AddRatingModal";
 import { addReview } from "../../api/review";
+import { MdFavorite } from "react-icons/md";
 
 export default function SingleMovie() {
   const [movie, setMovie] = useState({});
   const [ready, setReady] = useState(false);
+  const { authInfo } = useAuth();
 
   //for rating part
   const [ratingContainer, setRatingContainer] = useState(false);
@@ -35,7 +37,7 @@ export default function SingleMovie() {
       <div className="h-screen flex flex-col justify-center items-center">
         <VscLoading className="animate-spin text-primary-red text-8xl" />
         <div className="text-3xl text-white text-center animate-pulse">
-          Hold on, almost there...🍿🎥
+          Hold on, we are almost there...🍿🎥
         </div>
       </div>
     );
@@ -64,14 +66,18 @@ export default function SingleMovie() {
   };
 
   const handleSubmit = async (data) => {
+    console.log("handleSubmit...", data);
     const { error, message } = await addReview(movieId, data);
     if (error) return updateNotification("error", error);
 
     updateNotification("success", message);
     handleAddReview();
-    window.location.reload();
   };
-
+  const handleLikeClick = async () => {
+    const { error, message } = await updateMovieLike(id, authInfo.profile.id);
+    if (error) return updateNotification("error", error);
+    updateNotification("success", message);
+  };
   return (
     <>
       <div
@@ -84,7 +90,17 @@ export default function SingleMovie() {
         <video controls poster={poster} src={trailer}></video>
         <div className="flex mt-4 border-t pt-4 justify-between">
           <div className="w-[70%] md:w-[80%]">
-            <h1 className="text-xl md:text-4xl text-golden ">{title}</h1>
+            <div className="flex items-center mb-4 ">
+              <h1 className="text-xl md:text-4xl text-golden ">{title}</h1>
+              <MdFavorite
+                className={`text-xl lg:text-3xl ml-2 lg:ml-4 hover:text-primary-red cursor-pointer duration-200 ${
+                  authInfo.profile.likedMovies.includes(movieId)
+                    ? "text-primary-red "
+                    : "text-white "
+                }`}
+                onClick={handleLikeClick}
+              />
+            </div>
             <div className="mb-3 md:my-3 flex flex-wrap space-x-3">
               {genres.map((g, index) => {
                 return (

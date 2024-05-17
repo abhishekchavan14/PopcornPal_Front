@@ -69,3 +69,20 @@ export const getAllMovies = async () => {
     }
 }
 
+export const updateMovieLike = async (movieId, userId) => {
+    try {
+        const { data } = await client.post('/movie/like-movie', { movieId, userId })
+        return data
+    } catch (error) {
+        return { error: error.response.data.error }
+    }
+}
+export const getMovieNamesFromIds = async (movieIdArray) => {
+    try {
+        const { data } = await client.post('/movie/get-movie-names-list', { movieIdArray })
+        return data
+    } catch (error) {
+        return { error: error.response.data.error }
+    }
+}
+
