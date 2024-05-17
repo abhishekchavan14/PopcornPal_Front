@@ -58,7 +58,7 @@ export default function MovieReviews() {
 
   return (
     <div className="w-full h-full flex justify-center items-center text-white">
-      <div className="md:w-[80%] mt-4">
+      <div className="w-[90%] md:w-[80%] mt-4">
         <div className="flex justify-between items-center">
           <h1 className="text-lg md:text-2xl px-2 md:px-4">
             <span>Reviews for: </span>

@@ -11,6 +11,7 @@ export const addReview = async (movieId, reviewData) => {
         })
         return data
     } catch (error) {
+        console.log(error)
         return error
     }
 }
