@@ -21,7 +21,6 @@ export default function Navbar() {
   }
   const handleProfileClick = () => {
     setDisplayProfile((prev) => !prev);
-    handleMenuClick();
   };
   return (
     <div className="bg-primary p-4 md:pl-10 shadow-md shadow-black">
@@ -180,7 +179,7 @@ const Profile = ({ visible, username, email }) => {
     return (
       <>
         <div
-          className={`w-[20%] h-screen bg-dark-grey flex flex-col space-y-3 py-4 items-center absolute top-20 shadow-xl shadow-black text-white duration-300 ${
+          className={`w-[20%] h-screen bg-dark-grey flex flex-col space-y-3 p-6 items-center absolute top-20 shadow-xl shadow-black text-white duration-300 ${
             visible ? "right-0 " : "right-[-100%] "
           } `}
         >
