@@ -53,9 +53,15 @@ export default function LogIn() {
     }
     handleLogin(userInfo.email, userInfo.password);
   };
+  const handleDemoLogin = async()=>{
+    userInfo.email = "nobody141nobody@gmail.com";
+    userInfo.password = "789456123";
+    await handleLogin(userInfo.email, userInfo.password);
+  }
 
   if (authInfo.error) updateNotification("error", authInfo.error);
-  if (authInfo.error === "Please Verify your Email.") updateNotification("error", authInfo.error, "/auth/resend-otp");
+  if (authInfo.error === "Please Verify your Email.")
+    updateNotification("error", authInfo.error, "/auth/resend-otp");
 
   return (
     <div className="bg-[#1e1e1e] inset-0 fixed z-[-10] flex justify-center items-center">
@@ -64,7 +70,15 @@ export default function LogIn() {
           onSubmit={handleClick}
           className="bg-primary flex flex-col p-8 rounded-xl"
         >
-          <Title>Log In</Title>
+          <div className="mb-10">
+            <h1 className="text-center text-xl text-dark-subtle">Log In</h1>
+            <h1 className="text-center text-lg text-dark-subtle">
+              <span>OR </span>
+              <span>
+                <button className="text-primary-red underline" onClick={handleDemoLogin}>Use Demo Account?</button>
+              </span>
+            </h1>
+          </div>
           <Input
             name="email"
             value={userInfo.email}
