@@ -54,7 +54,7 @@ export default function LogIn() {
     handleLogin(userInfo.email, userInfo.password);
   };
   const handleDemoLogin = async()=>{
-    userInfo.email = "nobody141nobody@gmail.com";
+    userInfo.email = "abhishekchavan940@gmail.com";
     userInfo.password = "789456123";
     await handleLogin(userInfo.email, userInfo.password);
   }
